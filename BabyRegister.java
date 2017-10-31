@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.time.Year;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.text.DateFormat;
 
 public class BabyRegister {
@@ -18,10 +20,14 @@ public class BabyRegister {
         Baby b2 = new Baby("2014-02-14 04:23:45", "Yani", 'f');
         Baby b3 = new Baby("2016-07-29 07:12:23", "Shad", 'm');
 
-        Gift g1 = new Gift("Kar", "Food supply", new Date(2017, 02, 21));
-        Gift g2 = new Gift("Qas", "clothes", new Date(2017, 11, 21));
-        Gift g3 = new Gift("Mass", "Toys", new Date(2017, 07, 21));
-
+               Gift g1=null,g2=null,g3=null;
+	         try {
+	            g1 = new Gift("Kar", "Food supply", dt.parse("2017-02-21 22:23:00"));
+	            g2 = new Gift("Qas", "clothes", dt.parse("2017-11-21 13:20:11"));
+	            g3 = new Gift("Mass", "Toys", dt.parse("2017-07-21 09:30:12")); }
+	         catch(ParseException e) {
+	             System.out.println(e.toString());
+      }
         babies.add(b1);
         babies.add(b2);
         babies.add(b3);
@@ -29,10 +35,12 @@ public class BabyRegister {
         gifts.add(g1);
         gifts.add(g2);
         gifts.add(g3);
-
+        b1.add(g1);
+        b3.add(g2);
+        b3.add(g3);
         while (true) {
 
-            System.out.println("which operation do you want  to perform:\n1: add new baby \n2: list babies by names \n3: list babies by ages \n4: add gifts \n5: list gifts \n6: Age of the kid in days \n7: compare two babies by ages");
+            System.out.println("which operation do you want  to perform:\n1: add new baby \n2: list babies by age \n3: list babies by name \n4: add gifts \n5: list gifts \n6: Age of the kid in days \n7: compare two babies by ages");
             int i = in.nextInt();
             switch (i) {
                 case 1:
@@ -56,7 +64,7 @@ public class BabyRegister {
              }//end switch
        System.out.println("----------------------------------------------------------------");
        in=new Scanner(System.in);
-			System.out.println("Do you want to continue y/n ?");
+			System.out.println("Do you want to continue y(continue)/any(exit) ?");
 			char ch=in.nextLine().charAt(0);
             if(ch=='y')
             continue;
@@ -81,24 +89,22 @@ public class BabyRegister {
         System.out.println("Please Enter Baby's gender|");
         g = in.nextLine().charAt(0);
         babies.add(new Baby(db, name, g));
+
     }//end add_baby method
 
     public void list_baby(int o) {
     Date now=new Date();
 
-      for(Baby elem : babies){
-		  if(o==2) {
-        System.out.println(elem.getName()+"\t"+formatter.format(elem.getBirthday())+"\t"+elem.getGender());}
-        else if(o==3) {
-        System.out.println( (Year.now().getValue() - correct(elem.getBirthday().getYear()))+"\t"+elem.getName()+"\t"+elem.getGender());
-   }
+		ArrayList<Baby> ar=sortByAge(o);
+	    for(Baby elem : ar)
+	    System.out.println(elem.getName()+"\t"+formatter.format(elem.getBirthday())+"\t"+elem.getGender());
 
-    }//end for loop
          }//end list_baby method
 
     public void add_gift() {
-        String name, desc,dat;
+        String name, desc,dat,baby;
         Date date=new Date();
+        Gift g;
         in=new Scanner(System.in);
         System.out.println("Please Enter Person who give the gift");
         name = in.nextLine();
@@ -114,23 +120,32 @@ public class BabyRegister {
         catch (ParseException ex) {
             System.out.println(ex);
         }
-        gifts.add(new Gift(name, desc, date));
+        g=new Gift(name, desc, date);
+        boolean gs=false;
+        gifts.add(g);
+        System.out.println("Please enter the baby name you want to give the gift to ");
+        in=new Scanner(System.in);
+        baby=in.nextLine();
+        for(Baby elem : babies){
+			if(elem.getName().equals(baby)) {
+			elem.add(g);
+			gs=true;
+		    }
+
+		}//end loop
+                if(!gs) {
+                System.out.println(" Wrong name, gift has not been added ");
+				gifts.remove(g);}
     }//end add_gift method
 
     public void list_gift() {
-        for(Gift elem : gifts){
-		        System.out.println(elem.getName()+"\t"+elem.getDescrip()+"\t"+formatter.format(elem.getDate()));
+		for(Baby elems : babies) {
+        for(Object elem : elems){
+			   Gift elem1=(Gift)elem;
+            System.out.println("[ "+elem1.getName()+" \t| "+elem1.getDescrip()+" \t| "+formatter.format(elem1.getDate())+" "+" ]  "+elems.getName());
 	}//end for loop
+    }
     }//end list_gift method
-    public int correct(int c) {
-		if(c+1900<(Year.now().getValue())){
-		return c+1900;
-		}
-		else { if(c>(Year.now().getValue())) {
-		        return c-1900;}
-		   else return c; }
-	}//end correct method
-
 	public void getAgebyDays() {
 				Baby bb=null;
 				in=new Scanner(System.in);
@@ -172,4 +187,29 @@ public class BabyRegister {
 			  else System.out.println("both names should exist in the baby list");
 	}
 
+ArrayList<Baby> sortByAge(int o) {
+	ArrayList<Baby> babes=babies;
+	Baby temp;
+    if(o==2)
+	for(int i=0;i<babes.size();i++)
+	for(int j=i;j<babes.size();j++)
+	{
+		if(babes.get(i).getBirthday().getTime()<babes.get(j).getBirthday().getTime()){
+		temp=babes.get(j);
+		babes.set(j,babes.get(i));
+        babes.set(i, temp);
+	}
+	}//end loop
+	else if(o==3)
+	for(int i=0;i<babes.size();i++)
+		for(int j=i;j<babes.size();j++)
+		{
+			if(babes.get(i).getName().compareTo(babes.get(j).getName())>0){
+			temp=babes.get(j);
+			babes.set(j,babes.get(i));
+	        babes.set(i, temp);
+		}
+	}//end loop
+	return babes;
+}//end sortByAge method
 }//end class
