@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 
 public class Gift {
@@ -7,7 +8,8 @@ private String name;
 private String descrip;
 private Date date;
 
-SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyyy hh:mm");
+DateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 public Gift(String name,String descrip, Date date){
     this.name=name;
@@ -30,7 +32,12 @@ public Gift(String name,String descrip, Date date){
     }
 
     public void setDate(Date date) {
-        this.date = date;
+            try {
+	               this.date = dt.parse(dt.format(date));
+	           }
+	           catch (ParseException ex) {
+	               System.out.println(ex);
+        }
     }
 
     public String getName() {
@@ -42,12 +49,12 @@ public Gift(String name,String descrip, Date date){
     }
 
     public Date getDate() {
-		 date.setYear(date.getYear()-1900);
+	//	 date.setYear(date.getYear()-1900);
         return date;
     }
     @Override
     public String toString() {
-        return "Gifts{" + "Name=" + name + ", Description=" + descrip + ", Date=" + date + '}';
+        return "Gifts{" + "Name=" + name + ", Description=" + descrip + ", Date=" + formatter.format(date) + '}';
     }
 
 }
