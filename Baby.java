@@ -2,16 +2,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.time.Year;
 
-public class Baby {
+public class Baby extends ArrayList{
 
-    private Date birthday;
-    private String name;
-    private char gender;
+     Date birthday;
+     String name;
+     char gender;
 
-     DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+     DateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public Baby() {
@@ -21,7 +22,7 @@ public class Baby {
 
         try {
 
-            this.birthday = parser.parse(birthday);
+            this.birthday = dt.parse(birthday);
         }
         catch (ParseException e) {
             System.out.println(e.toString());
@@ -32,15 +33,22 @@ public class Baby {
     }//end constructor
 
     public Baby(Date birthday, String name, char gender) {
-
-        this.birthday=birthday;
+        try {
+             this.birthday=dt.parse(dt.format(birthday)); }
+        catch (ParseException ex) {
+			               System.out.println(ex);
+        }
         this.name = name;
         this.gender = gender;
     }
 
     public Date getBirthday() {
-
-        return birthday;
+       try {
+        return formatter.parse(formatter.format(birthday)); }
+       catch(ParseException ex) {
+		      System.out.println(ex);
+		  }
+	  return birthday;
     }
 
     public String getName() {
@@ -53,7 +61,11 @@ public class Baby {
 
     public void setBirthday(Date birthday) {
 
-        this.birthday = birthday;
+          try {
+		             this.birthday=dt.parse(dt.format(birthday)); }
+		  catch (ParseException ex) {
+					               System.out.println(ex);
+                  }
     }
 
     public void setName(String name) {
@@ -80,6 +92,6 @@ public class Baby {
 
     @Override
     public String toString() { //new SimpleDateFormat("dd/mm/yyyyy hh:mm").format(
-        return "Baby{" + "birthday=" + birthday + ", name=" + name + ", gender=" + gender + '}';
+        return "Baby{" + "birthday=" + formatter.format(birthday) + ", name=" + name + ", gender=" + gender + '}';
     }
 }
