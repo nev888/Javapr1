@@ -1,3 +1,5 @@
+package models;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,7 +78,7 @@ public class Baby extends ArrayList{
         this.gender = gender;
     }
 
-    boolean isOlder(Baby baby) {
+   public boolean isOlder(Baby baby) {
         if (birthday.compareTo(baby.birthday) < 0) {
             return true;
         } else {
@@ -84,7 +86,7 @@ public class Baby extends ArrayList{
         }
     }
 
-    int howOld() {
+    public int howOld() {
         Date date2 = new Date();
         long diff = date2.getTime()-birthday.getTime();
         return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
