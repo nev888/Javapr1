@@ -7,7 +7,8 @@ import java.time.Year;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.text.DateFormat;
-
+import models.Baby;
+import models.Gift;
 public class BabyRegister {
 
     ArrayList<Baby> babies = new ArrayList();
@@ -88,14 +89,20 @@ public class BabyRegister {
         db = in.nextLine();
         System.out.println("Please Enter Baby's gender|");
         g = in.nextLine().charAt(0);
+        if(!name.equals("") && !name.equals(" ") && !db.equals("") && !db.equals(" ") && g!=' ')
+        try{
         babies.add(new Baby(db, name, g));
+        System.out.println("Baby has been added"); }
+        catch(Exception ex)
+        {  System.out.println(ex+"\n Baby has not been added"); }
+        else System.out.println("All fields are required, baby has not been added");
 
     }//end add_baby method
 
     public void list_baby(int o) {
     Date now=new Date();
 
-		ArrayList<Baby> ar=sortByAge(o);
+		ArrayList<Baby> ar=sortBaby(o);
 	    for(Baby elem : ar)
 	    System.out.println(elem.getName()+"\t"+formatter.format(elem.getBirthday())+"\t"+elem.getGender());
 
@@ -187,29 +194,29 @@ public class BabyRegister {
 			  else System.out.println("both names should exist in the baby list");
 	}
 
-ArrayList<Baby> sortByAge(int o) {
-	ArrayList<Baby> babes=babies;
+ArrayList<Baby> sortBaby(int o) {
+	//ArrayList<Baby> babes=babies;
 	Baby temp;
     if(o==2)
-	for(int i=0;i<babes.size();i++)
-	for(int j=i;j<babes.size();j++)
+	for(int i=0;i<babies.size();i++)
+	for(int j=i;j<babies.size();j++)
 	{
-		if(babes.get(i).getBirthday().getTime()<babes.get(j).getBirthday().getTime()){
-		temp=babes.get(j);
-		babes.set(j,babes.get(i));
-        babes.set(i, temp);
+		if(babies.get(i).getBirthday().getTime() < babies.get(j).getBirthday().getTime()){
+		temp=babies.get(j);
+		babies.set(j,babies.get(i));
+        babies.set(i, temp);
 	}
 	}//end loop
 	else if(o==3)
-	for(int i=0;i<babes.size();i++)
-		for(int j=i;j<babes.size();j++)
+	for(int i=0;i<babies.size();i++)
+		for(int j=i;j<babies.size();j++)
 		{
-			if(babes.get(i).getName().compareTo(babes.get(j).getName())>0){
-			temp=babes.get(j);
-			babes.set(j,babes.get(i));
-	        babes.set(i, temp);
+			if(babies.get(i).getName().toUpperCase().compareTo(babies.get(j).getName().toUpperCase())>0){
+			temp=babies.get(i);
+			babies.set(i,babies.get(j));
+	        babies.set(j, temp);
 		}
 	}//end loop
-	return babes;
+	return babies;
 }//end sortByAge method
 }//end class
