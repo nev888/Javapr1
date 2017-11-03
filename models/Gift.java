@@ -52,7 +52,12 @@ public Gift(String name,String descrip, Date date){
 
     public Date getDate() {
 	//	 date.setYear(date.getYear()-1900);
-        return date;
+         try {
+		        return formatter.parse(formatter.format(date)); }
+		       catch(ParseException ex) {
+				      System.out.println(ex);
+				  }
+	  return date;
     }
     @Override
     public String toString() {
