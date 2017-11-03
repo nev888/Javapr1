@@ -3,16 +3,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.time.Year;
-import java.util.GregorianCalendar;
-import java.util.Calendar;
 import java.text.DateFormat;
 import models.Baby;
 import models.Gift;
+import java.time.LocalDateTime;
+
 public class BabyRegister {
 
-    ArrayList<Baby> babies = new ArrayList();
-    ArrayList<Gift> gifts = new ArrayList();
+    ArrayList<Baby> babies = new ArrayList<Baby>();
+    ArrayList<Gift> gifts = new ArrayList<Gift>();
     Scanner in = new Scanner(System.in);
     DateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH/mm");
@@ -100,9 +99,9 @@ public class BabyRegister {
     }//end add_baby method
 
     public void list_baby(int o) {
-    Date now=new Date();
-
-		ArrayList<Baby> ar=sortBaby(o);
+    //Date now=new Date();
+        ArrayList<Baby> ar=new ArrayList<Baby>();
+		ar=sortBaby(o);
 	    for(Baby elem : ar)
 	    System.out.println(elem.getName()+"\t"+formatter.format(elem.getBirthday())+"\t"+elem.getGender());
 
@@ -111,6 +110,9 @@ public class BabyRegister {
     public void add_gift() {
         String name, desc,dat,baby;
         Date date=new Date();
+       // Calendar date = Calendar.getInstance();
+       //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+      // LocalDateTime date = LocalDateTime.now();
         Gift g;
         in=new Scanner(System.in);
         System.out.println("Please Enter Person who give the gift");
